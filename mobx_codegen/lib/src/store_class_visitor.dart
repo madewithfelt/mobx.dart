@@ -208,7 +208,7 @@ bool hasGeneratedToString(ClassElement classElement) {
         _toStringAnnotationChecker.firstAnnotationOfExact(classElement);
     return annotation.getField('hasToString').toBoolValue();
   }
-  return true;
+  return false;
 }
 
 bool _any(List<bool> list) => list.any(_identity);
