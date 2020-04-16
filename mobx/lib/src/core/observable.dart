@@ -48,27 +48,29 @@ class Observable<T> extends Atom
   }
 
   set value(T value) {
-    _context.enforceWritePolicy(this);
+    context.conditionallyRunInAction(() {
+      _context.enforceWritePolicy(this);
 
-    final oldValue = _value;
-    final newValue = _prepareNewValue(value);
+      final oldValue = _value;
+      final newValue = _prepareNewValue(value);
 
-    if (newValue == WillChangeNotification.unchanged) {
-      return;
-    }
+      if (newValue == WillChangeNotification.unchanged) {
+        return;
+      }
 
-    _value = newValue;
+      _value = newValue;
 
-    reportChanged();
+      reportChanged();
 
-    if (_listeners.hasHandlers) {
-      final change = ChangeNotification<T>(
-          newValue: value,
-          oldValue: oldValue,
-          type: OperationType.update,
-          object: this);
-      _listeners.notifyListeners(change);
-    }
+      if (_listeners.hasHandlers) {
+        final change = ChangeNotification<T>(
+            newValue: value,
+            oldValue: oldValue,
+            type: OperationType.update,
+            object: this);
+        _listeners.notifyListeners(change);
+      }
+    }, this, name: name);
   }
 
   dynamic _prepareNewValue(T newValue) {
