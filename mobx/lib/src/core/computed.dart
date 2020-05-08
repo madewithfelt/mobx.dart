@@ -118,7 +118,7 @@ class Computed<T> extends Atom implements Derivation, ObservableValue<T> {
   }
 
   @override
-  void _onBecomeStale() {
+  void _onBecomeStale({Atom changedAtom}) {
     _context._propagatePossiblyChanged(this);
   }
 

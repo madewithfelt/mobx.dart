@@ -33,7 +33,7 @@ abstract class Derivation {
 
   DerivationState _dependenciesState;
 
-  void _onBecomeStale();
+  void _onBecomeStale({Atom changedAtom});
 
   // ignore: unused_element
   void _suspend();

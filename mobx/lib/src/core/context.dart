@@ -360,7 +360,7 @@ class ReactiveContext {
 
     for (final observer in atom._observers) {
       if (observer._dependenciesState == DerivationState.upToDate) {
-        observer._onBecomeStale();
+        observer._onBecomeStale(changedAtom: atom);
       }
       observer._dependenciesState = DerivationState.stale;
     }
@@ -377,7 +377,7 @@ class ReactiveContext {
       if (observer._dependenciesState == DerivationState.upToDate) {
         observer
           .._dependenciesState = DerivationState.possiblyStale
-          .._onBecomeStale();
+          .._onBecomeStale(changedAtom: atom);
       }
     }
   }

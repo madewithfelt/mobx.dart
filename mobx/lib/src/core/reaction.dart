@@ -51,7 +51,7 @@ class ReactionImpl implements Reaction {
   bool get isDisposed => _isDisposed;
 
   @override
-  void _onBecomeStale() {
+  void _onBecomeStale({Atom changedAtom}) {
     schedule();
   }
 
@@ -103,7 +103,7 @@ class ReactionImpl implements Reaction {
     if (_context._shouldCompute(this)) {
       try {
         _onInvalidate();
-      } on Object catch (e, st) {
+      } on Object catch (e) {
         // Note: "on Object" accounts for both Error and Exception
         _errorValue = MobXCaughtException(e);
         if (_context.config.disableErrorBoundaries == true) {
@@ -166,5 +166,6 @@ class ReactionImpl implements Reaction {
     _context._notifyReactionErrorHandlers(exception, this);
   }
 
-  @override String toString() => 'ReactionImpl: $name';
+  @override
+  String toString() => 'ReactionImpl: $name';
 }
