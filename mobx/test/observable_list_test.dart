@@ -296,9 +296,7 @@ void main() {
 dynamic _ignoreException(Function fn) {
   try {
     return fn();
-  } on Object catch (_) {
-    // Catching on Object since it takes care of both Error and Exception
-    // Ignore
+  } catch (_) {
     return null;
   }
 }

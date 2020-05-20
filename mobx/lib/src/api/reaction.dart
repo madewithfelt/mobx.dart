@@ -23,11 +23,13 @@ import 'package:mobx/src/core.dart';
 ///
 /// x.value = 30; // Will not cause autorun() to re-trigger as it's disposed.
 /// ```
-ReactionDisposer autorun(Function(Reaction) fn,
-        {String name,
-        int delay,
-        ReactiveContext context,
-        void Function(Object, Reaction) onError}) =>
+ReactionDisposer autorun(
+  Function(Reaction) fn, {
+  String name,
+  int delay,
+  ReactiveContext context,
+  ReactionErrorHandler onError,
+}) =>
     createAutorun(context ?? mainContext, fn,
         name: name, delay: delay, onError: onError);
 
@@ -44,13 +46,16 @@ ReactionDisposer autorun(Function(Reaction) fn,
 /// the [fn] to change its value. It is possible to define a custom [equals] function
 /// to override the default comparison for the value returned by [fn], to have fined
 /// grained control over when the reactions should run.
-ReactionDisposer reaction<T>(T Function(Reaction) fn, void Function(T) effect,
-        {String name,
-        int delay,
-        bool fireImmediately,
-        EqualityComparator<T> equals,
-        ReactiveContext context,
-        void Function(Object, Reaction) onError}) =>
+ReactionDisposer reaction<T>(
+  T Function(Reaction) fn,
+  void Function(T) effect, {
+  String name,
+  int delay,
+  bool fireImmediately,
+  EqualityComparator<T> equals,
+  ReactiveContext context,
+  ReactionErrorHandler onError,
+}) =>
     createReaction(context ?? mainContext, fn, effect,
         name: name,
         delay: delay,
@@ -64,11 +69,14 @@ ReactionDisposer reaction<T>(T Function(Reaction) fn, void Function(T) effect,
 /// You can read it as: "*when* [predicate()] turns true, the [effect()] is executed."
 ///
 /// Returns a function to dispose pre-maturely.
-ReactionDisposer when(bool Function(Reaction) predicate, void Function() effect,
-        {String name,
-        ReactiveContext context,
-        int timeout,
-        void Function(Object, Reaction) onError}) =>
+ReactionDisposer when(
+  bool Function(Reaction) predicate,
+  void Function() effect, {
+  String name,
+  ReactiveContext context,
+  int timeout,
+  ReactionErrorHandler onError,
+}) =>
     createWhenReaction(context ?? mainContext, predicate, effect,
         name: name, timeout: timeout, onError: onError);
 

@@ -22,8 +22,12 @@ class ReactionDisposer {
 
 /// An internal helper function to create a [autorun]
 ReactionDisposer createAutorun(
-    ReactiveContext context, Function(Reaction) trackingFn,
-    {String name, int delay, void Function(Object, Reaction) onError}) {
+  ReactiveContext context,
+  Function(Reaction) trackingFn, {
+  String name,
+  int delay,
+  ReactionErrorHandler onError,
+}) {
   ReactionImpl rxn;
 
   final rxnName = name ?? context.nameFor('Autorun');
@@ -66,12 +70,15 @@ ReactionDisposer createAutorun(
 
 /// An internal helper function to create a [reaction]
 ReactionDisposer createReaction<T>(
-    ReactiveContext context, T Function(Reaction) fn, void Function(T) effect,
-    {String name,
-    int delay,
-    bool fireImmediately,
-    EqualityComparator equals,
-    void Function(Object, Reaction) onError}) {
+  ReactiveContext context,
+  T Function(Reaction) fn,
+  void Function(T) effect, {
+  String name,
+  int delay,
+  bool fireImmediately,
+  EqualityComparator equals,
+  ReactionErrorHandler onError,
+}) {
   ReactionImpl rxn;
 
   final rxnName = name ?? context.nameFor('Reaction');
@@ -146,9 +153,14 @@ ReactionDisposer createReaction<T>(
 }
 
 /// An internal helper function to create a [when]
-ReactionDisposer createWhenReaction(ReactiveContext context,
-    bool Function(Reaction) predicate, void Function() effect,
-    {String name, int timeout, void Function(Object, Reaction) onError}) {
+ReactionDisposer createWhenReaction(
+  ReactiveContext context,
+  bool Function(Reaction) predicate,
+  void Function() effect, {
+  String name,
+  int timeout,
+  ReactionErrorHandler onError,
+}) {
   final rxnName = name ?? context.nameFor('When');
   final effectAction = Action(effect, name: '$rxnName-effect');
 
@@ -164,7 +176,7 @@ ReactionDisposer createWhenReaction(ReactiveContext context,
 
         final error = MobXException('WHEN_TIMEOUT');
         if (onError != null) {
-          onError(error, dispose.reaction);
+          onError(error, StackTrace.current, dispose.reaction);
         } else {
           // TODO(pavanpodila): Should this be reported with onReactionError handler???
           throw error;
@@ -191,9 +203,9 @@ Future<void> createAsyncWhenReaction(
     {String name, int timeout}) {
   final completer = Completer<void>();
   createWhenReaction(context, predicate, completer.complete,
-      name: name, timeout: timeout, onError: (error, reaction) {
+      name: name, timeout: timeout, onError: (error, stackTrace, reaction) {
     reaction.dispose();
-    completer.completeError(error);
+    completer.completeError(error, stackTrace);
   });
 
   return completer.future;

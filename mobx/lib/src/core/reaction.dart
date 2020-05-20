@@ -17,7 +17,7 @@ class ReactionImpl implements Reaction {
     this._context,
     Function() onInvalidate, {
     this.name,
-    void Function(Object, Reaction) onError,
+    ReactionErrorHandler onError,
     void Function(Reaction, Atom) onObservedAtomChanged,
   })  : assert(_context != null),
         assert(onInvalidate != null) {
@@ -26,7 +26,7 @@ class ReactionImpl implements Reaction {
     _onObservedAtomChanged = onObservedAtomChanged;
   }
 
-  void Function(Object, ReactionImpl) _onError;
+  ReactionErrorHandler _onError;
   void Function(Reaction, Atom) _onObservedAtomChanged;
 
   final ReactiveContext _context;
@@ -101,7 +101,7 @@ class ReactionImpl implements Reaction {
     }
 
     if (_context._hasCaughtException(this)) {
-      _reportException(_errorValue._exception);
+      _reportException(_errorValue.exception, _errorValue.stackTrace);
     }
 
     _context.endBatch();
@@ -120,13 +120,12 @@ class ReactionImpl implements Reaction {
     if (_context._shouldCompute(this)) {
       try {
         _onInvalidate();
-      } on Object catch (e) {
-        // Note: "on Object" accounts for both Error and Exception
-        _errorValue = MobXCaughtException(e);
+      } catch (e, st) {
+        _errorValue = MobXCaughtException(e, st);
         if (_context.config.disableErrorBoundaries == true) {
           rethrow;
         } else {
-          _reportException(e);
+          _reportException(e, st);
         }
       }
     }
@@ -169,9 +168,9 @@ class ReactionImpl implements Reaction {
     // Not applicable right now
   }
 
-  void _reportException(Object exception) {
+  void _reportException(Object exception, StackTrace stackTrace) {
     if (_onError != null) {
-      _onError(exception, this);
+      _onError(exception, stackTrace, this);
       return;
     }
 
@@ -180,7 +179,7 @@ class ReactionImpl implements Reaction {
       throw exception;
     }
 
-    _context._notifyReactionErrorHandlers(exception, this);
+    _context._notifyReactionErrorHandlers(exception, stackTrace, this);
   }
 
   @override

@@ -54,7 +54,7 @@ void main() {
             throw Exception('FAILED in when');
           },
           () {},
-          onError: (_, _a) {
+          onError: (_, __, _a) {
             thrown = true;
           });
 
@@ -83,10 +83,14 @@ void main() {
       fakeAsync((async) {
         final x = Observable(10);
         var thrown = false;
-        final d =
-            when((_) => x.value > 10, () {}, timeout: 1000, onError: (_, _a) {
-          thrown = true;
-        });
+        final d = when(
+          (_) => x.value > 10,
+          () {},
+          timeout: 1000,
+          onError: (_, __, _a) {
+            thrown = true;
+          },
+        );
 
         async.elapse(const Duration(milliseconds: 1000)); // cause a timeout
         expect(thrown, isTrue);

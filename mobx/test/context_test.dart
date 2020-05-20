@@ -18,7 +18,7 @@ void main() {
     test('global onReactionError is invoked for reaction errors', () {
       var caught = false;
 
-      final dispose = mainContext.onReactionError((_, rxn) {
+      final dispose = mainContext.onReactionError((_, __, rxn) {
         caught = true;
         expect(rxn.errorValue, isNotNull);
       });

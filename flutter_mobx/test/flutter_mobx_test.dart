@@ -18,7 +18,7 @@ class TestObserver extends Observer {
   @override
   Reaction createReaction(
     Function() onInvalidate, {
-    Function(Object, Reaction) onError,
+    ReactionErrorHandler onError,
   }) =>
       reaction;
 }

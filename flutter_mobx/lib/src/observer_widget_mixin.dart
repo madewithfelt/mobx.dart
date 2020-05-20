@@ -29,7 +29,7 @@ mixin ObserverWidgetMixin on Widget {
   @visibleForTesting
   Reaction createReaction(
     Function() onInvalidate, {
-    Function(Object, Reaction) onError,
+    ReactionErrorHandler onError,
   }) =>
       ReactionImpl(
         getContext(),
@@ -61,11 +61,11 @@ mixin ObserverElementMixin on ComponentElement {
 
   @override
   void mount(Element parent, dynamic newSlot) {
-    _reaction = _widget.createReaction(invalidate, onError: (e, _) {
+    _reaction = _widget.createReaction(invalidate, onError: (e, st, _) {
       FlutterError.reportError(FlutterErrorDetails(
         library: 'flutter_mobx',
         exception: e,
-        stack: e is Error ? e.stackTrace : null,
+        stack: st,
       ));
     }) as ReactionImpl;
     super.mount(parent, newSlot);

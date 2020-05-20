@@ -99,8 +99,8 @@ class Computed<T> extends Atom implements Derivation, ObservableValue<T> {
         try {
           value = _fn();
           _errorValue = null;
-        } on Object catch (e) {
-          _errorValue = MobXCaughtException(e);
+        } catch (e, st) {
+          _errorValue = MobXCaughtException(e, st);
         }
       }
     }

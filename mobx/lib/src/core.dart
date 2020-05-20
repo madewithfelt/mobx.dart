@@ -41,13 +41,13 @@ class MobXCyclicReactionException implements Exception {
 
 /// This captures the stack trace when user-land code throws an exception
 class MobXCaughtException implements Exception {
-  MobXCaughtException(exception) : _exception = exception;
+  MobXCaughtException(this.exception, this.stackTrace);
 
-  final Object _exception;
-  Object get exception => _exception;
+  final Object exception;
+  final StackTrace stackTrace;
 
   @override
-  String toString() => 'MobXCaughtException: $exception';
+  String toString() => 'MobXCaughtException: $exception\n$stackTrace';
 }
 
 typedef Dispose = void Function();

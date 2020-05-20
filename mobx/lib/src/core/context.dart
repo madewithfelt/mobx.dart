@@ -36,7 +36,8 @@ class _ReactiveState {
       trackingDerivation != null || computationDepth > 0;
 }
 
-typedef ReactionErrorHandler = void Function(Object error, Reaction reaction);
+typedef ReactionErrorHandler = void Function(
+    Object error, StackTrace stackTrace, Reaction reaction);
 
 /// Defines the behavior for observables read outside actions and reactions
 ///
@@ -249,8 +250,8 @@ class ReactiveContext {
       try {
         result = fn();
         d._errorValue = null;
-      } on Object catch (e) {
-        d._errorValue = MobXCaughtException(e);
+      } catch (e, st) {
+        d._errorValue = MobXCaughtException(e, st);
       }
     }
 
@@ -448,7 +449,8 @@ class ReactiveContext {
               } else {
                 try {
                   obs.value;
-                } on Object catch (_) {
+                } catch (e, st) {
+                  _notifyReactionErrorHandlers(e, st, derivation);
                   return true;
                 }
               }
@@ -499,11 +501,15 @@ class ReactiveContext {
     };
   }
 
-  void _notifyReactionErrorHandlers(Object exception, Reaction reaction) {
+  void _notifyReactionErrorHandlers(
+    Object exception,
+    StackTrace stackTrace,
+    Reaction reaction,
+  ) {
     // ignore: avoid_function_literals_in_foreach_calls
-    config._reactionErrorHandlers.forEach((f) {
-      f(exception, reaction);
-    });
+    for (final handler in config._reactionErrorHandlers) {
+      handler(exception, stackTrace, reaction);
+    }
   }
 
   bool startAllowStateChanges({bool allow}) {
