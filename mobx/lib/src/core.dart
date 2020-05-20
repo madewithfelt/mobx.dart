@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:collection/collection.dart';
 import 'package:mobx/mobx.dart';
 import 'package:mobx/src/utils.dart';
 

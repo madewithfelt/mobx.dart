@@ -8,16 +8,24 @@ abstract class Reaction implements Derivation {
   void _run();
 }
 
+typedef ObservedAtomChangedListener = void Function(Reaction, Atom);
+
 class ReactionImpl implements Reaction {
-  ReactionImpl(this._context, Function() onInvalidate,
-      {this.name, void Function(Object, Reaction) onError})
-      : assert(_context != null),
+  ReactionImpl(
+    this._context,
+    Function() onInvalidate, {
+    this.name,
+    void Function(Object, Reaction) onError,
+    void Function(Reaction, Atom) onObservedAtomChanged,
+  })  : assert(_context != null),
         assert(onInvalidate != null) {
     _onInvalidate = onInvalidate;
     _onError = onError;
+    _onObservedAtomChanged = onObservedAtomChanged;
   }
 
   void Function(Object, ReactionImpl) _onError;
+  void Function(Reaction, Atom) _onObservedAtomChanged;
 
   final ReactiveContext _context;
   void Function() _onInvalidate;
@@ -34,6 +42,9 @@ class ReactionImpl implements Reaction {
   @override
   // ignore: prefer_final_fields
   Set<Atom> _observables = {};
+
+  UnmodifiableSetView<Atom> get observables =>
+      UnmodifiableSetView(_observables);
 
   bool get hasObservables => _observables.isNotEmpty;
 
@@ -52,6 +63,9 @@ class ReactionImpl implements Reaction {
 
   @override
   void _onBecomeStale({Atom changedAtom}) {
+    if (_onObservedAtomChanged != null) {
+      _onObservedAtomChanged(this, changedAtom);
+    }
     schedule();
   }
 

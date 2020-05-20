@@ -8,6 +8,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  collection: ^1.14.0
   # flutter_test uses 1.1.6, so we cannot use 1.1.7 yet
   meta: ^1.1.6
 
