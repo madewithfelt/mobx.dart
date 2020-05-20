@@ -184,5 +184,5 @@ class ReactionImpl implements Reaction {
   }
 
   @override
-  String toString() => 'ReactionImpl: $name';
+  String toString() => 'ReactionImpl($name)';
 }

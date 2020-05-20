@@ -117,6 +117,9 @@ class Atom {
       }
     };
   }
+
+  @override
+  String toString() => 'Atom($name)';
 }
 
 class WillChangeNotification<T> {

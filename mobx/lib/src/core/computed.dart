@@ -162,4 +162,7 @@ class Computed<T> extends Atom implements Derivation, ObservableValue<T> {
       prevValue = newValue;
     }, context: _context);
   }
+
+  @override
+  String toString() => 'Computed($name)';
 }
