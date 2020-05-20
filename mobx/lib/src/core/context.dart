@@ -62,7 +62,7 @@ class ReactiveConfig {
 
   /// The main or default configuration used by [ReactiveContext]
   static final ReactiveConfig main = ReactiveConfig(
-      disableErrorBoundaries: debugMode,
+      disableErrorBoundaries: false,
       writePolicy: ReactiveWritePolicy.observed,
       readPolicy: ReactiveReadPolicy.never);
 
