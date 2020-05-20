@@ -10,7 +10,11 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  mobx: ^1.0.0
+  mobx:
+    git:
+      url: git@github.com:madewithfelt/mobx.dart.git
+      path: mobx
+
   flutter:
     sdk: flutter
 
