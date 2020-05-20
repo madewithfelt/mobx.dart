@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/widgets.dart';
 import 'package:mobx/mobx.dart';
 
@@ -16,16 +14,26 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 abstract class StatelessObserverWidget extends StatelessWidget
     with ObserverWidgetMixin {
   /// Initializes [key], [context] and [name] for subclasses.
-  const StatelessObserverWidget({Key key, ReactiveContext context, String name})
-      : _name = name,
+  const StatelessObserverWidget({
+    Key key,
+    ReactiveContext context,
+    ObservedAtomChangedListener onObservedAtomChanged,
+    String name,
+  })  : _name = name,
         _context = context,
+        _onObservedAtomChanged = onObservedAtomChanged,
         super(key: key);
 
   final String _name;
   final ReactiveContext _context;
+  final ObservedAtomChangedListener _onObservedAtomChanged;
 
   @override
   String getName() => _name ?? '$this';
+
+  @override
+  ObservedAtomChangedListener getObservedAtomChangedListener() =>
+      _onObservedAtomChanged;
 
   @override
   ReactiveContext getContext() => _context ?? super.getContext();
@@ -43,4 +51,3 @@ class StatelessObserverElement extends StatelessElement
   @override
   StatelessObserverWidget get widget => super.widget as StatelessObserverWidget;
 }
-

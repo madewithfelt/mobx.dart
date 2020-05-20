@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mobx/mobx.dart';
@@ -20,6 +18,9 @@ mixin ObserverWidgetMixin on Widget {
   /// An identifiable name that can be overriden for debugging.
   String getName();
 
+  /// An optional listener which is called when an observed atom is changed.
+  ObservedAtomChangedListener getObservedAtomChangedListener();
+
   /// The context within which its reaction should be run. It is the
   /// [mainContext] in most cases.
   ReactiveContext getContext() => mainContext;
@@ -27,14 +28,15 @@ mixin ObserverWidgetMixin on Widget {
   /// A convenience method used for testing.
   @visibleForTesting
   Reaction createReaction(
-      Function() onInvalidate, {
-        Function(Object, Reaction) onError,
-      }) =>
+    Function() onInvalidate, {
+    Function(Object, Reaction) onError,
+  }) =>
       ReactionImpl(
         getContext(),
         onInvalidate,
         name: getName(),
         onError: onError,
+        onObservedAtomChanged: getObservedAtomChangedListener(),
       );
 
   /// Convenience method to output console messages as debugging output. Logging

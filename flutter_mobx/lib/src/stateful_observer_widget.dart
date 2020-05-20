@@ -1,4 +1,3 @@
-
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
@@ -28,6 +27,9 @@ abstract class StatefulObserverWidget extends StatefulWidget
   String getName() => _name ?? '$this';
 
   @override
+  ObservedAtomChangedListener getObservedAtomChangedListener() => null;
+
+  @override
   ReactiveContext getContext() => _context ?? super.getContext();
 
   @override
@@ -43,4 +45,3 @@ class StatefulObserverElement extends StatefulElement
   @override
   StatefulObserverWidget get widget => super.widget as StatefulObserverWidget;
 }
-

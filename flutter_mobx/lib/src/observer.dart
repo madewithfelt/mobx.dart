@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/src/stateless_observer_widget.dart';
+import 'package:mobx/mobx.dart';
 
 /// `true` if a stack frame indicating where an [Observer] was created should be
 /// included in its name. This is useful during debugging to identify the source
@@ -22,10 +23,18 @@ class Observer extends StatelessObserverWidget
         // ignore: avoid_implementing_value_types
         Builder {
   // ignore: prefer_const_constructors_in_immutables
-  Observer({Key key, @required this.builder, String name})
-      : assert(builder != null),
+  Observer({
+    Key key,
+    @required this.builder,
+    String name,
+    ObservedAtomChangedListener onObservedAtomChanged,
+  })  : assert(builder != null),
         debugConstructingStackFrame = debugFindConstructingStackFrame(),
-        super(key: key, name: name);
+        super(
+          key: key,
+          name: name,
+          onObservedAtomChanged: onObservedAtomChanged,
+        );
 
   @override
   final WidgetBuilder builder;
