@@ -3,6 +3,8 @@ part of '../core.dart';
 abstract class Reaction implements Derivation {
   bool get isDisposed;
 
+  UnmodifiableSetView<Atom> get observables;
+
   void dispose();
 
   void _run();
@@ -43,6 +45,7 @@ class ReactionImpl implements Reaction {
   // ignore: prefer_final_fields
   Set<Atom> _observables = {};
 
+  @override
   UnmodifiableSetView<Atom> get observables =>
       UnmodifiableSetView(_observables);
 
