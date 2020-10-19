@@ -200,11 +200,4 @@ mixin _$User on UserBase, Store {
       _$UserBaseActionController.endAction(_$actionInfo);
     }
   }
-
-  @override
-  String toString() {
-    final string =
-        'firstName: ${firstName.toString()},middleName: ${middleName.toString()},lastName: ${lastName.toString()},friend: ${friend.toString()},callback: ${callback.toString()},callback2: ${callback2.toString()},fullName: ${fullName.toString()}';
-    return '{$string}';
-  }
 }
